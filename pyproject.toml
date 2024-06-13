@@ -16,6 +16,7 @@ requests = "^2.32.3"
 ruff = "^0.4.8"
 pytest = "^8.2.2"
 pytest-asyncio = "^0.23.7"
+pre-commit = "^3.7.1"
 
 [build-system]
 requires = ["poetry-core"]

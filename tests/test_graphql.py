@@ -1,4 +1,3 @@
-
 async def test_get_categories(gql_client):
     # This test will fail because the client is not connected
     # and the client is not connected because the connect method
