@@ -5,6 +5,7 @@ import aiohttp
 @pytest.fixture
 def gql_client():
     from ruvmedia.gql_client import RuvGQLClient
+
     return RuvGQLClient()
 
 

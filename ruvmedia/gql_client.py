@@ -1,14 +1,13 @@
-
 from gql import Client, gql
 from gql.transport.aiohttp import AIOHTTPTransport
 
 
 class RuvGQLClient:
     def __init__(self):
-        self.transport = AIOHTTPTransport(
-            url="https://spilari.nyr.ruv.is/gql/")
-        self.client = Client(transport=self.transport,
-                             fetch_schema_from_transport=False)
+        self.transport = AIOHTTPTransport(url="https://spilari.nyr.ruv.is/gql/")
+        self.client = Client(
+            transport=self.transport, fetch_schema_from_transport=False
+        )
 
     async def connect(self):
         self._session = await self._client.connect_async(reconnecting=True)
@@ -29,8 +28,10 @@ class RuvGQLClient:
                 }
             }
         """)
-        answer = await self.client.execute_async(query, variable_values={"station": station})
-        return answer['Category']
+        answer = await self.client.execute_async(
+            query, variable_values={"station": station}
+        )
+        return answer["Category"]
 
     async def get_category(self, category, station="tv"):
         query = gql("""
@@ -52,8 +53,10 @@ class RuvGQLClient:
                 }
             }
         """)
-        answer = await self.client.execute_async(query, variable_values={"category": category, "station": station})
-        return answer['Category']
+        answer = await self.client.execute_async(
+            query, variable_values={"category": category, "station": station}
+        )
+        return answer["Category"]
 
     async def get_program(self, id: int):
         query = gql("""
@@ -81,7 +84,7 @@ class RuvGQLClient:
         """)
 
         answer = await self.client.execute_async(query, variable_values={"id": int(id)})
-        return answer['Program']
+        return answer["Program"]
 
     async def get_episode(self, progam_id: int, episode_id: str):
         query = gql("""
@@ -97,5 +100,8 @@ class RuvGQLClient:
   }
         """)
 
-        answer = await self.client.execute_async(query, variable_values={"programID": int(progam_id), "episodeID": [episode_id]})
-        return answer['Program']
+        answer = await self.client.execute_async(
+            query,
+            variable_values={"programID": int(progam_id), "episodeID": [episode_id]},
+        )
+        return answer["Program"]
