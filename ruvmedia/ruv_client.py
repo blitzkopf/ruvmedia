@@ -22,6 +22,7 @@ class RUVClient:
         if self.gq_client is None:
             # self.gq_client = RuvGQLClient(self.session, self.user_agent)
             self.gq_client = RuvGQLClient()
+            self.gq_client.session = self.session
 
     async def async_get_data(self):
         pass
