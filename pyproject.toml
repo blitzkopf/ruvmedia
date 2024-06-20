@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ruvmedia"
-version = "0.0.1"
+version = "0.0.2"
 description = ""
 authors = ["Yngvi Thor Sigurjonsson <blitzkopf@gmail.com>"]
 readme = "README.md"
