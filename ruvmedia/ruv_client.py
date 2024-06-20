@@ -49,6 +49,7 @@ class RUVClient:
                     name=item["title"],
                     url=item["slug"],
                     identifier=f"program.{item['programID']}",
+                    image=item["image"],
                 )
                 for item in items["categories"][0]["programs"]
             ]
@@ -64,6 +65,32 @@ class RUVClient:
                 for category in categories["categories"]
             ]
 
+    async def async_get_panels(self, panel: str | None) -> list[Media]:
+        LOGGER.debug("Panel: %s", panel)
+        if panel:
+            # categories = await self.gq_client.get_panel(panel)
+            items = await self.gq_client.get_panel(panel)
+            return [
+                Media(
+                    name=item["title"],
+                    url=item["slug"],
+                    identifier=f"program.{item['programID']}",
+                    image=item["image"],
+                )
+                for item in items["panels"][0]["programs"]
+            ]
+        else:
+            panels = await self.gq_client.get_panels()
+            # return [Media(**channel) for channel in channels]
+            return [
+                Media(
+                    name=panel["title"],
+                    url=panel["slug"],
+                    identifier=f"panel.{panel['slug']}",
+                )
+                for panel in panels["panels"]
+            ]
+
     async def async_get_programs(self, program_id: str) -> list[Media]:
         LOGGER.debug("Program: %s", program_id)
         # categories = await self.gq_client.get_category(category)
@@ -73,6 +100,7 @@ class RUVClient:
                 name=item["title"],
                 url=item["id"],
                 identifier=f"program.{program_id}.{item['id']}",
+                image=item["image"],
             )
             for item in episodes["episodes"]
         ]

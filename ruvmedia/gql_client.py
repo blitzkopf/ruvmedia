@@ -58,6 +58,55 @@ class RuvGQLClient:
         )
         return answer["Category"]
 
+    async def get_panels(self, station="tv"):
+        query = gql("""
+            query getPanel($station: Station!) {
+                Featured(station: $station) {
+                    id
+                    panels {
+                        title
+                        type
+                        slug
+                        id
+
+                        __typename
+                    }
+                    __typename
+                }
+            }
+        """)
+        answer = await self.client.execute_async(
+            query, variable_values={"station": station}
+        )
+        return answer["Featured"]
+
+    async def get_panel(self, slug, station="tv"):
+        query = gql("""
+            query getPanel($slug: [String!], $station: Station!) {
+                Featured(station: $station) {
+                    panels(slug: { value: $slug }) {
+                        title
+                        display_style
+                        slug
+                        type
+                        programs {
+                            title
+                            programID
+                            slug
+                            image
+                            __typename
+                        }
+                        __typename
+                    }
+                    __typename
+                }
+            }
+        """)
+        answer = await self.client.execute_async(
+            query, variable_values={"slug": slug, "station": station}
+        )
+        return answer["Featured"]
+
     async def get_program(self, id: int):
         query = gql("""
             query getProgram($id: Int!) {

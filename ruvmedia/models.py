@@ -10,3 +10,4 @@ class Media:
     name: str
     identifier: str
     url: str
+    image: str | None = None
