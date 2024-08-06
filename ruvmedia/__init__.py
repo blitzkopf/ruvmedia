@@ -1,4 +1,4 @@
 from .ruv_client import RUVClient
-from .models import Media
+from .models import MediaInfo
 
-__all__ = ["RUVClient", "Media"]
+__all__ = ["RUVClient", "MediaInfo"]
