@@ -3,10 +3,12 @@ import aiohttp
 
 
 @pytest.fixture
-def gql_client():
+async def gql_client():
     from ruvmedia.gql_client import RuvGQLClient
 
-    return RuvGQLClient()
+    gql = RuvGQLClient()
+    yield gql
+    await gql.close()
 
 
 @pytest.fixture
