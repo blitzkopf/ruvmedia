@@ -35,6 +35,7 @@ class RUVClient:
                 name=channel["name"],
                 url=channel["url"],
                 identifier=channel["identifier"],
+                image=channel["image"],
             )
             for channel in channels
         ]
