@@ -8,14 +8,18 @@ class RuvGQLClient:
         self.client = Client(
             transport=self.transport, fetch_schema_from_transport=False
         )
+        self.session = None
+        # self.session = await self.client.connect_async(reconnecting=True)
 
     async def connect(self):
-        self._session = await self._client.connect_async(reconnecting=True)
+        if self.session is None:
+            self.session = await self.client.connect_async(reconnecting=True)
 
     async def close(self):
-        await self._client.close_async()
+        await self.client.close_async()
 
     async def get_categories(self, station="tv"):
+        await self.connect()
         query = gql("""
             query getCategories($station: StationSearch!) {
                 Category(station: $station) {
@@ -28,12 +32,11 @@ class RuvGQLClient:
                 }
             }
         """)
-        answer = await self.client.execute_async(
-            query, variable_values={"station": station}
-        )
+        answer = await self.session.execute(query, variable_values={"station": station})
         return answer["Category"]
 
     async def get_category(self, category, station="tv"):
+        await self.connect()
         query = gql("""
             query getCatgory($category: String!, $station: StationSearch!) {
                 Category(station: $station, category: $category) {
@@ -53,12 +56,13 @@ class RuvGQLClient:
                 }
             }
         """)
-        answer = await self.client.execute_async(
+        answer = await self.session.execute(
             query, variable_values={"category": category, "station": station}
         )
         return answer["Category"]
 
     async def get_panels(self, station="tv"):
+        await self.connect()
         query = gql("""
             query getPanel($station: Station!) {
                 Featured(station: $station) {
@@ -75,12 +79,11 @@ class RuvGQLClient:
                 }
             }
         """)
-        answer = await self.client.execute_async(
-            query, variable_values={"station": station}
-        )
+        answer = await self.session.execute(query, variable_values={"station": station})
         return answer["Featured"]
 
     async def get_panel(self, slug, station="tv"):
+        await self.connect()
         query = gql("""
             query getPanel($slug: [String!], $station: Station!) {
                 Featured(station: $station) {
@@ -102,12 +105,13 @@ class RuvGQLClient:
                 }
             }
         """)
-        answer = await self.client.execute_async(
+        answer = await self.session.execute(
             query, variable_values={"slug": slug, "station": station}
         )
         return answer["Featured"]
 
     async def get_program(self, id: int):
+        await self.connect()
         query = gql("""
             query getProgram($id: Int!) {
                 Program(id: $id) {
@@ -132,10 +136,11 @@ class RuvGQLClient:
             }
         """)
 
-        answer = await self.client.execute_async(query, variable_values={"id": int(id)})
+        answer = await self.session.execute(query, variable_values={"id": int(id)})
         return answer["Program"]
 
     async def get_episode(self, progam_id: int, episode_id: str):
+        await self.connect()
         query = gql("""
             query getEpisode($programID: Int!, $episodeID: [String!] = [""])  {
     Program(id: $programID) {
@@ -149,7 +154,7 @@ class RuvGQLClient:
   }
         """)
 
-        answer = await self.client.execute_async(
+        answer = await self.session.execute(
             query,
             variable_values={"programID": int(progam_id), "episodeID": [episode_id]},
         )
